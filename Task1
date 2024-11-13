@@ -1,0 +1,83 @@
+import pyttsx3
+from gtts import gTTS
+import os
+from playsound import playsound
+
+def list_voices(engine):
+    """List available voices in pyttsx3"""
+    voices = engine.getProperty('voices')
+    for index, voice in enumerate(voices):
+        print(f"{index + 1}. {voice.name} - {voice.languages}")
+    return voices
+
+def set_voice(engine, voice_choice):
+    """Set the voice for speech synthesis in pyttsx3"""
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[voice_choice].id)
+
+def set_speech_rate(engine, rate):
+    """Set the speech rate in pyttsx3"""
+    engine.setProperty('rate', rate)
+
+def set_volume(engine, volume):
+    """Set volume for the voice"""
+    engine.setProperty('volume', volume)
+
+def text_to_speech_pyttsx3(text, language="en", voice_choice=0, rate=150, volume=1.0):
+    """Convert text to speech using pyttsx3"""
+    engine = pyttsx3.init()
+    set_voice(engine, voice_choice)
+    set_speech_rate(engine, rate)
+    set_volume(engine, volume)
+    
+    print(f"Speaking in {language} with voice {voice_choice + 1}...")
+    engine.say(text)
+    engine.runAndWait()
+
+def text_to_speech_gtts(text, language="en", save_to_file=False):
+    """Convert text to speech using gTTS"""
+    tts = gTTS(text=text, lang=language, slow=False)
+    
+    if save_to_file:
+        filename = f"output_{language}.mp3"
+        tts.save(filename)
+        print(f"Audio saved to {filename}")
+        return filename
+    else:
+        print(f"Speaking in {language}...")
+        tts.save("temp.mp3")
+        playsound("temp.mp3")
+        os.remove("temp.mp3")
+
+def main():
+    print("Welcome to the Text-to-Speech Converter Application")
+
+    # Input text from user
+    text = input("Enter the text you want to convert to speech: ")
+
+    # Choose the method of TTS (pyttsx3 or gTTS)
+    method = input("Choose TTS method (1 for pyttsx3, 2 for gTTS): ")
+
+    if method == "1":
+        engine = pyttsx3.init()
+        print("Available voices in pyttsx3:")
+        voices = list_voices(engine)
+        voice_choice = int(input(f"Choose a voice (1-{len(voices)}): ")) - 1
+        rate = int(input("Enter speech rate (default 150): ") or 150)
+        volume = float(input("Enter volume (0.0 to 1.0, default 1.0): ") or 1.0)
+        language = "en"  # Limited language support in pyttsx3
+        text_to_speech_pyttsx3(text, language, voice_choice, rate, volume)
+    elif method == "2":
+        language = input("Enter the language (default 'en' for English): ") or "en"
+        save_audio = input("Do you want to save the audio to file? (y/n): ").lower() == 'y'
+        filename = text_to_speech_gtts(text, language, save_audio)
+        if save_audio:
+            print(f"Audio file saved as {filename}")
+        else:
+            playsound("temp.mp3")
+            os.remove("temp.mp3")
+    else:
+        print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
