@@ -1,8 +1,13 @@
-Name:DARSHANSING RAJPUT
+Name:YASHODEEP PATIL
+
 Company:CODETECH IT SOLUTION
+
 ID: CT08DS9311
+
 Domain:Machine Learning
+
 Duration:October to November 2024
+
 
 Overview of the Text-to-Speech (TTS) Conversion Application
 The goal of this task is to develop a Text-to-Speech (TTS) conversion application that allows users to input text, customize the speech synthesis (such as voice, language, rate, and volume), and generate corresponding audio output. The application should be user-friendly and capable of supporting multiple languages and voices.
